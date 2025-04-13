@@ -18,7 +18,15 @@ Port 3128 is the default squid port.
 - Custom access control rules
 - Easy uninstall script
 
+
 ## How to Run
 ```bash
-chmod +x setup_squid.sh
-sudo ./setup_squid.sh
+chmod +x setupSquid.sh
+sudo ./setupSquid.sh
+```
+
+## How to Uninstall
+``` bash
+chmod +x uninstall_squid.sh
+sudo ./uninstall_squid.sh
+```
