@@ -11,13 +11,14 @@ echo "Storing the original Squid.conf File for backups."
 sudo cp /etc/squid/squid.conf /etc/squid/squid.conf.bak
 
 
-sudo bash -c 'cat > /etc/squid/squid.conf << EOF
-http_port 3128
-acl allowed_sites dstdomain .google.com
-http_access allow allowed_sites
-http_access deny all
-EOF'
+echo "example.com" | sudo tee /etc/squid/whitelist.txt 
 
+sudo tee /etc/squid/squid.conf > /dev/null <<EOL
+acl whitelist dstdomain "/etc/squid/whitelist.txt"
+http_access allow whitelist
+http_access deny all
+http_port 3128
+EOL
 
 sudo systemctl restart squid
 
