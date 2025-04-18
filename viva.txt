@@ -1,0 +1,59 @@
+ What is a forward proxy, and how does it differ from a reverse proxy?
+    → A forward proxy acts on behalf of clients to access the internet, while a reverse proxy acts on behalf of servers to handle incoming client requests.
+
+Why did you choose Squid for implementing the proxy server?
+    → Squid is open-source, lightweight, well-documented, and widely used for HTTP caching and access control, making it ideal for forward proxy use cases.
+
+What is the purpose of http_access in the squid.conf file?
+    → http_access controls who can access what resources through the proxy. It's used to allow or deny traffic based on ACLs.
+
+How does Squid handle HTTP vs HTTPS traffic? Why does HTTPS not work in your setup?
+    → Squid can handle HTTP by default. HTTPS requires extra configuration like SSL-Bump or the CONNECT method. Since this project uses a basic HTTP proxy, HTTPS is denied.
+
+Explain the role of ACLs (Access Control Lists) in Squid.
+    → ACLs define rules to match traffic based on criteria like IP, domain, time, etc., which are then used in http_access rules to allow or deny traffic.
+
+What does the TCP_DENIED/403 log entry mean in Squid logs?
+    → It means the request was explicitly denied by Squid due to http_access rules, resulting in a 403 Forbidden response.
+
+Why is www.example.com being denied even though it is in the whitelist?
+    → Likely because the blocked_sites.txt entry or a conflicting ACL is taking precedence. Also, incorrect ACL order or missing domain patterns (like . prefix) can cause this.
+
+What does HIER_NONE/- indicate in Squid access logs?
+    → It means the request wasn’t forwarded to any upstream cache or server. Squid directly denied it without fetching the resource.
+
+How do you verify that your browser traffic is going through Squid?
+    → By configuring the browser’s proxy settings to point to localhost:3128 and observing access logs in /var/log/squid/access.log.
+
+How would you test that domain blocking is working correctly?
+    → Try accessing a blocked domain (e.g., .facebook.com) in the browser. If blocked, a 403 error appears and a TCP_DENIED log is generated.
+
+What is the difference between domain and dstdomain in ACL definitions?
+    → dstdomain is used for matching the destination domain of the HTTP request, commonly used in filtering rules.
+
+Why is .facebook.com blocked but facebook.com might still work (or vice versa)?
+    → A leading dot in ACLs matches subdomains. Without it, only exact domain matches happen.
+
+How does the Zenity script interact with the Squid configuration files?
+    → It takes user input for whitelist/blacklist domains and appends them to their respective files, then restarts Squid to apply changes.
+
+What happens if the whitelist and blacklist conflict with each other? Which rule takes priority?
+    → The order of http_access rules determines priority. Rules higher up in the config are evaluated first.
+
+What are some limitations of this HTTP-only forward proxy?
+    → It cannot handle HTTPS traffic without extra configuration, lacks authentication, and doesn’t provide fine-grained controls per user or IP.
+
+How would you extend this setup to handle HTTPS using SSL-Bump or a CONNECT method (in theory)?
+    → You'd need to configure Squid to intercept CONNECT requests, generate a self-signed CA certificate, and enable SSL-Bump with proper ACLs.
+
+What does the sudo systemctl restart squid command do? When should you run it?
+    → It restarts the Squid service to reload configuration changes. Run it after editing squid.conf or modifying the whitelist/blacklist files.
+
+Why is input validation important in the Zenity script?
+    → To avoid injecting invalid or empty domains, which could break access control rules or introduce security risks.
+
+What is zenity and why was it used in this project?
+    → Zenity is a tool to create simple GUI dialogs in shell scripts. It was used to provide a user-friendly way to update domain lists.
+
+What does the Squid log entry format represent (e.g., time, IP, status)?
+    → It shows timestamp, response time, client IP, status code, request type, URL, hierarchy, and MIME type.
