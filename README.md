@@ -1,4 +1,4 @@
-# ProxyServerWithSquid
+# Squid-Controller
 We are configuring a proxy server via Squid.
 
 # Squid Proxy Server Automation
