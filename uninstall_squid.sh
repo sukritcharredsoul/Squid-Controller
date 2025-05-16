@@ -4,7 +4,7 @@ echo "Stop Squid Application"
 sudo systemctl stop squid
 
 echo "Removing the Application from the system."
-sudo apt remove --purge -y squid
+sudo dnf remove --purge -y squid
 
 echo "Cleaning up the remaining files from system."
 sudo rm -rf /etc/squid
